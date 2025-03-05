@@ -27,7 +27,7 @@ pip install -r requirements.txt --prefer-binary
 ```
 3. Setup environment(Windows)
 ```bash
-Set up environment (Windows)
+mkdir D:\huggingface_cache
 ```
 
 ## Usage
