@@ -37,3 +37,8 @@ Set up environment (Windows)
 ```bash
 python debloater.py path/to/your/file.py
 ```
+
+**Example**
+```bash
+python .\debloater.py "D:\Devang Masters\Q2\260\Project\Project_Repos\jawiki-kana-kanji-dict\jawiki\post_validate.py"
+```
