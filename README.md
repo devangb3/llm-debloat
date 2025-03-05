@@ -42,3 +42,25 @@ python debloater.py path/to/your/file.py
 ```bash
 python .\debloater.py "D:\Devang Masters\Q2\260\Project\Project_Repos\jawiki-kana-kanji-dict\jawiki\post_validate.py"
 ```
+
+# Debloat using API
+
+## Clone the repo and install requirements like above in step 2
+
+## Usage
+llm-choice is the LLM you want to use for debloating this file, currently only GPT4o and Deepseek-Coder are supported,
+For GPT4o llm-choice=0
+For Deepseek Coder llm-choice=1
+*** Basic Command***
+
+```bash
+python .\debloater_api.py path/to/your/file.py --llm llm-choice
+```
+***Example using GPT4o***
+```
+python .\debloater_api.py "D:\Devang Masters\Q2\260\Project\Project_Repos\jawiki-kana-kanji-dict\jawiki\post_validate.py" --llm 0
+```
+***Example using Deepseek***
+```
+python .\debloater_api.py "D:\Devang Masters\Q2\260\Project\Project_Repos\jawiki-kana-kanji-dict\jawiki\post_validate.py" --llm 1
+```
