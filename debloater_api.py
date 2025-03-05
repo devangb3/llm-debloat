@@ -20,10 +20,15 @@ import sys
 import re
 from dotenv import load_dotenv
 
-def count_loc(code: str) -> int:
-    """Count lines of code ignoring comments and blanks"""
-    return sum(1 for line in code.split('\n') 
-              if line.strip() and not line.strip().startswith(('#', '//')))
+def count_loc(file_path):
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+            return len(lines)
+    except FileNotFoundError:
+        print(f"File not found: {file_path}")
+    except Exception as e:
+        print(f"Error reading file: {e}")
 
 # Configuration: Specify LLM provider and API details here
 LLM_PROVIDER = "openai"  # Default LLM provider. Change to "other_llm" if extending to another LLM
@@ -61,7 +66,7 @@ if not os.path.exists(file_path):
 print(f"Reading file: {file_path}")
 with open(file_path, 'r', encoding='utf-8') as file:
     code = file.read()
-    original_loc = count_loc(code)
+    original_loc = count_loc(file_path)
     print(f"Original LOC: {original_loc}")
 
 # Prepare the prompt with the code
@@ -86,7 +91,17 @@ if LLM_PROVIDER == "openai":
         match = re.search(r'```python(.*?)```', response_content, re.DOTALL)
         if match:
             debloated_code = match.group(1).strip()
-            new_loc = count_loc(debloated_code)
+            backup_path = f"{file_path}.bak"
+            print(f"Creating backup at: {backup_path}")
+            with open(backup_path, 'w', encoding='utf-8') as backup:
+                backup.write(code)
+            print(f"Writing debloated code to {file_path}")
+            with open(file_path, 'w', encoding='utf-8') as file:
+                file.write(debloated_code)
+
+            print(f"Debloated code has been successfully written to {file_path}")
+            print(f"Original code backed up to {backup_path}")
+            new_loc = count_loc(file_path)
             reduction = ((original_loc - new_loc) / original_loc) * 100
             
             print("\n=== Code Metrics ===")
@@ -109,23 +124,3 @@ else:
     #     client = OtherLLMClient(api_key=api_key)
     #     response = client.call(prompt)
 
-# Warn the user before overwriting the file
-print("\nWarning: This will overwrite the original file. Make sure to back up your code.")
-confirm = input("Proceed? (y/n): ")
-if confirm.lower() != 'y':
-    print("Aborted.")
-    sys.exit(0)
-
-# Create backup of original file
-backup_path = f"{file_path}.bak"
-print(f"Creating backup at: {backup_path}")
-with open(backup_path, 'w', encoding='utf-8') as backup:
-    backup.write(code)
-
-# Write the debloated code back to the original file
-print(f"Writing debloated code to {file_path}")
-with open(file_path, 'w', encoding='utf-8') as file:
-    file.write(debloated_code)
-
-print(f"Debloated code has been successfully written to {file_path}")
-print(f"Original code backed up to {backup_path}")
