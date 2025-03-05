@@ -19,7 +19,7 @@ An AI-powered tool to analyze and remove bloat from code files while maintaining
 
 1. **Clone repository**
 ```bash
-git clone https://github.com/yourusername/code-debloater.git
+git clone https://github.com/devangb3/llm-debloat.git
 cd code-debloater
 ```
 2. **Install requirements**
